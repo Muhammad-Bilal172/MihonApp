@@ -21,7 +21,6 @@ def library_func(app):
         if categories is None:
             cursor.execute("INSERT INTO library_categories (user_id, category_name) VALUES (%s, %s)", (user_id, "Default Library"))
 
-        theme = request.cookies.get("theme")
         theme = "dark" if theme == "dark" else "light"
 
         cursor.execute("SELECT downloaded_only_mode FROM download_only WHERE user_id = %s", (user_id,))
