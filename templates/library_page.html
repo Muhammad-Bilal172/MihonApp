@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/theme_variables.css">
+    <title>Document</title>
+</head>
+<body data-theme="{{ theme }}">
+    <div class="header_outer_region">
+        <div class="inner_header">
+            <svg class="menu-icon" onclick="openSidebar()" width="28" height="28" viewBox="0 0 24 24" fill="black"
+                xmlns="http://www.w3.org/2000/svg">
+                <line x1="3" y1="6" x2="21" y2="6" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}" stroke-width="2"/>
+                <line x1="3" y1="12" x2="21" y2="12" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}" stroke-width="2"/>
+                <line x1="3" y1="18" x2="21" y2="18" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}" stroke-width="2"/>
+            </svg>
+
+            <div id="sidebar" class="sidebar">
+                <span class="close-btn" onclick="closeSidebar()">×</span>
+
+                <a href="/library">Library</a>
+                <a href="#">Updates</a>
+                <a href="/view_manga_history">History</a>
+                <a href="/all_extensions">Browse</a>
+                <a href="/more_feautures">More</a>
+            </div>
+            <form class="header_search_group" action="/search" method="post">
+                <input class="header_search" type="text" name="query" placeholder="Search...">
+                <button class="header_button search_button">Search</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="outer_region">
+        <div class="main_left_side">
+            {% if library_names: %}
+            <div>
+                <h1 class="left_heading_bar"><a href="/library">Library</a></h1>
+            </div>
+
+            {% else: %}
+            <h1 class="section-title">Menu Bars</h1>
+            <div>
+                <h1 class="left_heading_bar"><a href="/source">Sources</a></h1>
+                <h1 class="left_heading_bar"><a href="/all_extensions">Extension</a></h1>
+                <h1 class="left_heading_bar"><a href="#">Migrate</a></h1>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if manga_data: %}
+        <div class="main_right_side">
+            <div class="details_side details-offset">
+                {% for i in manga_data: %}
+                <div class="all_thumb_nails_side">
+                    <a href="/manga/{{ i[4] }}/{{ i[0] }}"><img class="thumb_nails" src="{{ i[3] }}" alt=""></a>
+                    <p class="manga_title"><a href="/manga/{{ i[4] }}/{{ i[0] }}">{{ i[4] }}</a></p>
+                    <div class="manga_meta">
+                        <span class="manga_chapter">{{ i[5] }}</span>
+                        <span class="manga_rating">{{ i[6] }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% elif libraries: %}
+        <div class="main_right_side">
+            {% for lib in libraries %}
+                <div class="history-day">
+                    <div class="history-day-header">
+                        <h2 class="history-day-title">{{ lib.category_name }}</h2>
+                    </div>
+                    <div class="details_side details-offset history-day-grid">
+                        {% for i in lib.manga_data %}
+                        <div class="all_thumb_nails_side">
+                            <a href="/manga/{{ i[4] }}/{{ i[0] }}"><img class="thumb_nails" src="{{ i[3] }}" alt=""></a>
+                            <p class="manga_title"><a href="/manga/{{ i[4] }}/{{ i[0] }}">{{ i[4] }}</a></p>
+                            <div class="manga_meta">
+                                <span class="manga_chapter">{{ i[5] }}</span>
+                                <span class="manga_rating">{{ i[6] }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% else: %}
+        <h1>Sorry, No Data Available</h1>
+        {% endif %} 
+    </div>
+
+
+    <script>
+        function openSidebar() {
+        document.getElementById("sidebar").style.left = "0";
+        }
+
+        function closeSidebar() {
+        document.getElementById("sidebar").style.left = "-21rem";
+        }
+    </script>
+</body>
+</html>

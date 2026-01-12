@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/theme_variables.css">
+    <title>Document</title>
+</head>
+
+<body data-theme="{{ theme }}">
+    <div class="header_outer_region">
+        <div class="inner_header">
+            <svg class="menu-icon" onclick="openSidebar()" width="28" height="28" viewBox="0 0 24 24" fill="black"
+                xmlns="http://www.w3.org/2000/svg">
+                <line x1="3" y1="6" x2="21" y2="6" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}" stroke-width="2" />
+                <line x1="3" y1="12" x2="21" y2="12" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}" stroke-width="2" />
+                <line x1="3" y1="18" x2="21" y2="18" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}" stroke-width="2" />
+            </svg>
+
+            <div id="sidebar" class="sidebar">
+                <span class="close-btn" onclick="closeSidebar()">×</span>
+
+                <a href="/library">Library</a>
+                <a href="#">Updates</a>
+                <a href="/view_manga_history">History</a>
+                <a href="/all_extensions">Browse</a>
+                <a href="/more_feautures">More</a>
+            </div>
+            <div class="header_search_group">
+                <input class="header_search" type="text" placeholder="Search...">
+                <button class="header_button search_button">Search</button>
+            </div>
+            <button class="header_button add_extension_button"><a href="/addExtension">+ Add Extension</a></button>
+        </div>
+    </div>
+
+    <div class="outer_region">
+        <div class="main_left_side">
+            <h1 class="section-title">More Feautures</h1>
+            <div>
+                <h1 class="left_heading_bar"><a href="/more_feautures/download_only">Download Only</a>
+                </h1>
+                <h1 class="left_heading_bar"><a href="/more_feautures/incognito">Incognito Mode</a></h1>
+                <h1 class="left_heading_bar"><a href="#">Download Queue</a>
+                </h1>
+                <h1 class="left_heading_bar"><a href="/categories">Categories</a></h1>
+                <h1 class="left_heading_bar"><a href="/statistics">Statistics</a></h1>
+                <h1 class="left_heading_bar"><a href="#">Data and
+                        Storage</a></h1>
+                <h1 class="left_heading_bar"><a href="/settings">Settings</a></h1>
+                <h1 class="left_heading_bar"><a href="#">About</a></h1>
+                <h1 class="left_heading_bar"><a href="#">Help</a></h1>
+                <h1 class="left_heading_bar"><a href="#">Donate</a></h1>
+            </div>
+        </div>
+
+        <div class="main_right_side">
+            <div class="settings_card">
+                <h1>Please press the button for go to incognito mode: </h1>
+                <form id="incognitoForm" action="/incognito_mode" method="get">
+                    <input type="hidden" id="incognito_box" name="incognito_box" value="false">
+                    <label class="switch">
+                        <input type="checkbox" id="incognito_toggle">
+                        <span class="checkbox_slider"></span>
+                    </label>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openSidebar() {
+            document.getElementById("sidebar").style.left = "0";
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.left = "-21rem";
+        }
+
+        // Keep the toggle state on the frontend and submit true/false to the backend.
+        const incognitoToggle = document.getElementById("incognito_toggle");
+        const incognitoInput = document.getElementById("incognito_box");
+        const form = document.getElementById("incognitoForm");
+
+        const savedState = localStorage.getItem("incognito_box") === "true";
+        incognitoToggle.checked = savedState;
+        incognitoInput.value = savedState ? "true" : "false";
+
+        incognitoToggle.addEventListener("change", () => {
+            const isOn = incognitoToggle.checked;
+            const value = isOn ? "true" : "false";
+            incognitoInput.value = value;
+            localStorage.setItem("incognito_box", value);
+            form.submit();
+        });
+    </script>
+</body>
+
+</html>

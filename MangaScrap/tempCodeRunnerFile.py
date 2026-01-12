@@ -1,0 +1,1 @@
+https://asuracomic.net/series/reaper-of-the-drifting-moon-4e4ff282/chapter/116

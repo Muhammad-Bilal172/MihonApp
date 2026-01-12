@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/theme_variables.css">
+    <title>Document</title>
+</head>
+<body data-theme="{{ theme }}">
+    <div class="header_outer_region">
+        <div class="inner_header">
+            <div class="header_search_group">
+                <input class="header_search" type="text" placeholder="Search...">
+                <button class="header_button search_button">Search</button>
+            </div>
+            <button class="header_button add_extension_button">+ Add Extension</button>
+        </div>
+    </div>
+    <div class="outer_region">
+        <div class="main_left_side">
+            <h1 class="section-title">Menu Bars</h1>
+            <div>
+                <h1 class="left_heading_bar"><a href="/source">Sources</a></h1>
+                <h1 class="left_heading_bar"><a href="/all_extensions">Extension</a></h1>
+                <h1 class="left_heading_bar"><a href="#">Migrate</a></h1>
+            </div>
+        </div>
+
+        <div class="main_right_side">
+            <div class="details_side details-offset">
+                <div>
+                    <form action="/add_all_extensions" method="post">
+                        <h1>Please enter the link of your Extension</h1>
+                        <input type="text" name="extension_link" class="header_search">
+                        <button class="header_button add_extension_button mt-1">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error" id="error-box" role="alert">
+        <div class="alert-content">
+            <span class="alert-icon">!</span>
+            <span class="alert-message">{{ error }}</span>
+        </div>
+        <button type="button" class="alert-close" id="error-close" aria-label="Close error message">&times;</button>
+    </div>
+    {% endif %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const alertBox = document.getElementById('error-box');
+            const closeButton = document.getElementById('error-close');
+
+            if (alertBox && closeButton) {
+                closeButton.addEventListener('click', () => {
+                    alertBox.classList.add('alert-dismissed');
+                    setTimeout(() => alertBox.remove(), 200);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

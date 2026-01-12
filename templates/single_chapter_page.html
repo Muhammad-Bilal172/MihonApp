@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/theme_variables.css">
+    <title>Chapter Images</title>
+</head>
+<body class="chapter-page-body" data-theme="{{ theme }}">
+    <main class="chapter-page">
+        <div class="chapter-grid">
+            {% for i in urls: %}
+            <div class="chapter-card">
+                <img src="{{ i }}" alt="Chapter page {{ loop.index }}"loading="lazy"
+                    decoding="async"
+                    fetchpriority="low"
+                    referrerpolicy="no-referrer">
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    {% if error %}
+    <div class="alert alert-error" id="error-box" role="alert">
+        <div class="alert-content">
+            <span class="alert-icon">!</span>
+            <span class="alert-message">{{ error }}</span>
+        </div>
+        <button type="button" class="alert-close" id="error-close" aria-label="Close error message">&times;</button>
+    </div>
+    {% endif %}
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const alertBox = document.getElementById('error-box');
+            const closeButton = document.getElementById('error-close');
+
+            if (alertBox && closeButton) {
+                closeButton.addEventListener('click', () => {
+                    alertBox.classList.add('alert-dismissed');
+                    setTimeout(() => alertBox.remove(), 200);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

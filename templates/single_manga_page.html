@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/theme_variables.css">
+    <title>Document</title>
+</head>
+
+<body data-theme="{{ theme }}">
+    <div class="header_outer_region">
+        <div class="inner_header">
+
+            <svg class="menu-icon" onclick="openSidebar()" width="28" height="28" viewBox="0 0 24 24" fill="black"
+                xmlns="http://www.w3.org/2000/svg">
+                <line x1="3" y1="6" x2="21" y2="6" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}" stroke-width="2"/>
+                <line x1="3" y1="12" x2="21" y2="12" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}" stroke-width="2"/>
+                <line x1="3" y1="18" x2="21" y2="18" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}" stroke-width="2"/>
+            </svg>
+
+            <div id="sidebar" class="sidebar">
+                <span class="close-btn" onclick="closeSidebar()">×</span>
+
+                <a href="/library">Library</a>
+                <a href="#">Updates</a>
+                <a href="/view_manga_history">History</a>
+                <a href="/all_extensions">Browse</a>
+                <a href="/more_feautures">More</a>
+            </div>
+
+            <div class="header_search_group">
+                <input class="header_search" type="text" placeholder="Search...">
+                <button class="header_button search_button">Search</button>
+            </div>
+            <button class="header_button add_extension_button"><a class="plain_link" href="/addExtension">+ Add
+                    Extension</a></button>
+        </div>
+    </div>
+
+
+    <div class="outer_region">
+        <div class="main_left_side">
+            <h1 class="menu_title">Menu Bars</h1>
+            <div>
+                <h1 class="left_heading_bar"><a class="plain_link" href="/source">Sources</a></h1>
+                <h1 class="left_heading_bar"><a class="plain_link" href="/all_extensions">Extension</a></h1>
+                <h1 class="left_heading_bar"><a class="plain_link" href="#">Migrate</a></h1>
+            </div>
+        </div>
+
+        <div class="main_right_side">
+            <div class="manga_detail_grid">
+                <section class="manga_info_card">
+                    <div class="manga_info_header">
+                        <img class="thumb_nails cover_large" src="{{ manga_data[0] }}" alt="Manga cover">
+                        <div class="manga_info_body">
+                            <p class="tagline"></p>
+                            <h1 class="manga_title_display">{{ manga_data[1] }}</h1>
+                            <p class="manga_rating_line">
+                                <span class="rating_value">{{ manga_data[3] }}</span>
+                                <span class="rating_out_of">/ 10 rating</span>
+                            </p>
+                            <div class="info_row">
+                                <span class="info_label">Image URL</span>
+                                <a class="info_value link" href="{{ manga_data[0] }}" target="_blank"
+                                    rel="noreferrer">gg.asuracomic.net/.../thumb-small.webp</a>
+                            </div>
+                            <div class="info_row">
+                                <span class="info_label">Chapters</span>
+                                <span class="info_value">{{ manga_data[2] }}</span>
+                            </div>
+                            <div class="library_toggle">
+                                <input type="checkbox" id="add_to_library" name="add_to_library"
+                                    aria-label="Add to library">
+                                <a class="heart_button" href="#category-modal" aria-label="Add to library">♥</a>
+                                <span class="label_text">Add to library</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="chapters_card">
+                    <div class="card_header">
+                        <div>
+                            <h2 class="card_title">Chapters</h2>
+                            <p class="card_hint">Latest releases in reverse chronological order.</p>
+                        </div>
+                        <span class="pill">Updated</span>
+                    </div>
+
+                    {% for chapter in chapter_data: %}
+                    <div class="chapter_list">
+                        <div class="chapter_row">
+                            <div>
+                                <div class="chapter_number">{{ chapter[1] }}</div>
+                                <div class="chapter_date">{{ chapter[2] }}</div>
+                            </div>
+                            <span class="chapter_action"><a class="plain_link"
+                                    href="/chapterImages/manga_id/{{ manga_id }}/chapter_id/{{ chapter[3] }}/chapter_number/{{ chapter[1] }}">Read</a></span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div class="category_modal_backdrop" id="category-modal" aria-hidden="true" role="dialog"
+        aria-label="Choose categories">
+        <div class="category_modal">
+            <div class="category_modal_header">
+                <h3 class="category_modal_title">Choose library categories</h3>
+                <a class="modal_close_btn" href="#" aria-label="Close">&times;</a>
+            </div>
+            <p class="modal_hint">Select the categories for this manga and save.</p>
+            <form class="category_modal_form" action="/toggle" method="post">
+                <input type="hidden" name="manga_id" value="{{ manga_id }}">
+                <div class="category_options">
+                    {% set selected = selected_categories if selected_categories is defined else [] %}
+                    {% if library_categories: %}
+                    {% for category in library_categories: %}
+                    <label class="category_option">
+                        <span class="category_option_label">{{ category[2] }}</span>
+                        <input type="checkbox" name="categories" value="{{ category[2] }}" {% if category[2] in selected %}checked{% endif %}>
+                        <span class="check_mark">✓</span>
+                    </label>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="modal_actions">
+                    <button class="modal_button secondary" type="button" id="category-cancel">Cancel</button>
+                    <button class="modal_button primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openSidebar() {
+        document.getElementById("sidebar").style.left = "0";
+        }
+
+        function closeSidebar() {
+        document.getElementById("sidebar").style.left = "-21rem";
+        }
+    </script>
+
+    <script>
+        document.getElementById('category-cancel')?.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.location.hash = '';
+        });
+    </script>
+</body>
+
+</html>

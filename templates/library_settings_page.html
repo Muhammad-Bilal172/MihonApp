@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/theme_variables.css">
+    <title>Document</title>
+</head>
+
+<body data-theme="{{ theme }}">
+    <div class="header_outer_region">
+        <div class="inner_header">
+            <svg class="menu-icon" onclick="openSidebar()" width="28" height="28" viewBox="0 0 24 24" fill="black"
+                xmlns="http://www.w3.org/2000/svg">
+                <line x1="3" y1="6" x2="21" y2="6" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}"
+                    stroke-width="2" />
+                <line x1="3" y1="12" x2="21" y2="12" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}"
+                    stroke-width="2" />
+                <line x1="3" y1="18" x2="21" y2="18" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}"
+                    stroke-width="2" />
+            </svg>
+
+            <div id="sidebar" class="sidebar">
+                <span class="close-btn" onclick="closeSidebar()">×</span>
+
+                <a href="/library">Library</a>
+                <a href="#">Updates</a>
+                <a href="/view_manga_history">History</a>
+                <a href="/all_extensions">Browse</a>
+                <a href="/more_feautures">More</a>
+            </div>
+            <div class="header_search_group">
+                <input class="header_search" type="text" placeholder="Search...">
+                <button class="header_button search_button">Search</button>
+            </div>
+            <button class="header_button add_extension_button"><a href="/addExtension">+ Add Extension</a></button>
+        </div>
+    </div>
+
+    <div class="outer_region">
+        <div class="main_left_side">
+            <h1 class="section-title">More Feautures</h1>
+            <div>
+                <h1 class="left_heading_bar"><a href="/appearance">Appearence</a></h1>
+                <h1 class="left_heading_bar"><a href="/library_settings">Library</a></h1>
+            </div>
+        </div>
+        <div class="main_right_side">
+            <div class="settings_card">
+                <div class="settings_header">
+                    <h2>Categories</h2>
+                    <p class="settings_hint">Pick how Mihon should look on this device.</p>
+                </div>
+                <div class="theme-options">
+                    <label class="theme-option" for="theme-system">
+                        <div class="theme-copy">
+                            <div>
+                                <h3><a href="/categories" style="color: var(--text); text-decoration:none">Edit
+                                        Categories</a></h3>
+                                <p>Follow your OS preference.</p>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+                <div class="theme-options">
+                    <label class="theme-option" for="theme-system">
+                        <div class="theme-copy">
+                            <div>
+                                <h3>Default Catergory</h2>
+                                <p class="settings_hint">Pick how Mihon should look on this device.</p>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('category-cancel')?.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.location.hash = '';
+        });
+    </script>
+
+    <script>
+        function openSidebar() {
+            document.getElementById("sidebar").style.left = "0";
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.left = "-21rem";
+        }
+
+        const themeCheckboxes = document.querySelectorAll('.theme-checkbox');
+        themeCheckboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    themeCheckboxes.forEach((other) => {
+                        if (other !== checkbox) {
+                            other.checked = false;
+                        }
+                    });
+                }
+            });
+        });
+
+        const dateFormatCheckboxes = document.querySelectorAll('.date-format-checkbox');
+        dateFormatCheckboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    dateFormatCheckboxes.forEach((other) => {
+                        if (other !== checkbox) {
+                            other.checked = false;
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

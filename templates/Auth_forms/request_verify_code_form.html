@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/auth_styles.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="outer_region">
+        <div class="inner_header">
+            <h1 class="main_heading_header">Simple Project</h1>
+            <h1 class="main_heading_header" style="padding-right: 5rem;">Request Verify Code</h1>
+        </div>
+    </div>
+
+    <div class="outer_region">
+        <form action="/request_verify_email" method="post">
+            <div class="inner_verify">
+                <div>
+                    <h1>Please enter Email for verification code</h1>
+                    <input class="register_input_boxes" type="email" name="email">
+                </div>
+                <div style="height: 2rem;"></div>
+                <div>
+                    <button class="verify_button">Enter</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% if errors: %}
+    {% for error in errors %}
+    <p class="for_errors">{{ error }}</p>
+    {% endfor %}
+    {% endif %}
+
+    {% if email_error: %}
+    {% for error in email_error %}
+    <p class="for_errors">{{ error }}</p>
+    {% endfor %}
+    {% endif %}
+
+</body>
+</html>

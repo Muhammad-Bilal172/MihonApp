@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/theme_variables.css">
+    <title>Document</title>
+</head>
+
+<body data-theme="{{ theme }}">
+    <div class="header_outer_region">
+        <div class="inner_header">
+            <svg class="menu-icon" onclick="openSidebar()" width="28" height="28" viewBox="0 0 24 24" fill="black"
+                xmlns="http://www.w3.org/2000/svg">
+                <line x1="3" y1="6" x2="21" y2="6" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}" stroke-width="2"/>
+                <line x1="3" y1="12" x2="21" y2="12" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}" stroke-width="2"/>
+                <line x1="3" y1="18" x2="21" y2="18" stroke="{% if theme == 'light' %}black{% else %}white{% endif %}" stroke-width="2"/>
+            </svg>
+
+            <div id="sidebar" class="sidebar">
+                <span class="close-btn" onclick="closeSidebar()">×</span>
+
+                <a href="/library">Library</a>
+                <a href="#">Updates</a>
+                <a href="/view_manga_history">History</a>
+                <a href="/all_extensions">Browse</a>
+                <a href="/more_feautures">More</a>
+            </div>
+            <div class="header_search_group">
+                <input class="header_search" type="text" placeholder="Search...">
+                <button class="header_button search_button">Search</button>
+            </div>
+            <button class="header_button add_extension_button"><a href="/addExtension">+ Add Extension</a></button>
+        </div>
+    </div>
+
+    <div class="outer_region">
+        <div class="main_left_side">
+            <h1 class="section-title">More Feautures</h1>
+            <div>
+                <h1 class="left_heading_bar"><a href="/appearance">Appearence</a></h1>
+                <h1 class="left_heading_bar"><a href="/library_settings">Library</a></h1>
+            </div>
+        </div>
+        <div class="main_right_side">
+            <div class="settings_card">
+                <div class="settings_header">
+                    <h2>Theme</h2>
+                    <p class="settings_hint">Pick how Mihon should look on this device.</p>
+                </div>
+                <form action="/set_theme" method="post">
+                    <div class="theme-options">
+                        <label class="theme-option" for="theme-system">
+                            <input name="system" class="theme-checkbox" type="checkbox" id="theme-system" value="system" {% if theme == 'system' %}checked{% endif %}>
+                            <div class="theme-copy">
+                                <h3>System</h3>
+                                <p>Follow your OS preference.</p>
+                            </div>
+                        </label>
+                        <label class="theme-option" for="theme-dark">
+                            <input name="dark" class="theme-checkbox" type="checkbox" id="theme-dark" value="dark" {% if theme == 'dark' %}checked{% endif %}>
+                            <div class="theme-copy">
+                                <h3>Dark</h3>
+                                <p>Deep blacks for low light.</p>
+                            </div>
+                        </label>
+                        <label class="theme-option" for="theme-light">
+                            <input name="light" class="theme-checkbox" type="checkbox" id="theme-light" value="light" {% if theme == 'light' %}checked{% endif %}>
+                            <div class="theme-copy">
+                                <h3>Light</h3>
+                                <p>Brighter surfaces and contrast.</p>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="theme-actions">
+                        <button type="submit" class="primary_save_button">Save</button>
+                    </div>
+                </form>
+            </div>
+            <div class="settings_card">
+                <div class="settings_header">
+                    <h2>Display</h2>
+                    <p class="settings_hint">Pick how Mihon should look on this device.</p>
+                </div>
+                <div class="theme-options">
+                    <label class="theme-option" for="theme-light">
+                        <div class="theme-copy">
+                            <h3>Date Formatter</h3>
+                            <a href="#category-modal" style="color: var(--text); text-decoration: none;">Click</a>
+                        </div>
+                    </label>
+                </div>
+                <div class="theme-options">
+                    <label class="theme-option" for="theme-light">
+                        <div class="theme-copy" style="width: 100%;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <h3>Relative Timestamp</h3>
+                                <form id="incognitoForm" action="/relative_timestamps" method="get">
+                                    <input type="hidden" id="incognito_box" name="relative_timestamp_box" value="false">
+                                    <label class="switch">
+                                        <input type="checkbox" id="incognito_toggle">
+                                        <span class="checkbox_slider"></span>
+                                    </label>
+                                </form>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category_modal_backdrop" id="category-modal" aria-hidden="true" role="dialog"
+        aria-label="Choose categories">
+        <div class="category_modal">
+            <div class="category_modal_header">
+                <h3 class="category_modal_title">Choose the Day Formatting</h3>
+                <a class="modal_close_btn" href="#" aria-label="Close">&times;</a>
+            </div>
+            <p class="modal_hint">Select the Date And Save it</p>
+            <form class="category_modal_form" action="/get_day_formatter" method="post">
+                <input type="hidden" name="manga_id">
+                <div class="category_options">
+                    <label class="category_option">
+                        <span class="category_option_label">Default (MM / DD / YYYY)</span>
+                        <input type="checkbox" name="date_format" value="Default" class="date-format-checkbox" {% if day_formatter == 'Default' %}checked{% endif%}>
+                        <span class="check_mark">✓</span>
+                    </label>
+                    <label class="category_option">
+                        <span class="category_option_label">MM / DD / YYYY</span>
+                        <input type="checkbox" name="date_format" value="MM / DD / YYYY" class="date-format-checkbox" {% if day_formatter == 'MM / DD / YYYY' %}checked{% endif%}>
+                        <span class="check_mark">✓</span>
+                    </label>
+                    <label class="category_option">
+                        <span class="category_option_label">DD / MM / YYYY</span>
+                        <input type="checkbox" name="date_format" value="DD / MM / YYYY" class="date-format-checkbox" {% if day_formatter == 'DD / MM / YYYY' %}checked{% endif%}>
+                        <span class="check_mark">✓</span>
+                    </label>
+                    <label class="category_option">
+                        <span class="category_option_label">YYYY-MM-DD</span>
+                        <input type="checkbox" name="date_format" value="YYYY-MM-DD" class="date-format-checkbox" {% if day_formatter == 'YYYY-MM-DD' %}checked{% endif%}>
+                        <span class="check_mark">✓</span>
+                    </label>
+                    <label class="category_option">
+                        <span class="category_option_label">DD MMM YYYY (01 Jan 2026)</span>
+                        <input type="checkbox" name="date_format" value="DD MMM YYYY (01 Jan 2026)" class="date-format-checkbox" {% if day_formatter == 'DD MMM YYYY (01 Jan 2026)' %}checked{% endif%}>
+                        <span class="check_mark">✓</span>
+                    </label>
+                    <label class="category_option">
+                        <span class="category_option_label">MMM DD, YYYY (Jan 01, 2026)</span>
+                        <input type="checkbox" name="date_format" value="MMM DD, YYYY (Jan 01, 2026)" class="date-format-checkbox" {% if day_formatter == 'MMM DD, YYYY (Jan 01, 2026)' %}checked{% endif%}>
+                        <span class="check_mark">✓</span>
+                    </label>
+                </div>
+                <div class="modal_actions">
+                    <button class="modal_button secondary" type="button" id="category-cancel">Cancel</button>
+                    <button class="modal_button primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const incognitoToggle = document.getElementById("incognito_toggle");
+        const incognitoInput = document.getElementById("incognito_box");
+        const form = document.getElementById("incognitoForm");
+
+        const savedState = localStorage.getItem("incognito_box") === "true";
+        incognitoToggle.checked = savedState;
+        incognitoInput.value = savedState ? "true" : "false";
+
+        incognitoToggle.addEventListener("change", () => {
+            const isOn = incognitoToggle.checked;
+            const value = isOn ? "true" : "false";
+            incognitoInput.value = value;
+            localStorage.setItem("incognito_box", value);
+            form.submit();
+        });
+    </script>
+
+    <script>
+        document.getElementById('category-cancel')?.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.location.hash = '';
+        });
+    </script>
+
+    <script>
+        function openSidebar() {
+        document.getElementById("sidebar").style.left = "0";
+        }
+
+        function closeSidebar() {
+        document.getElementById("sidebar").style.left = "-21rem";
+        }
+
+        const themeCheckboxes = document.querySelectorAll('.theme-checkbox');
+        themeCheckboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    themeCheckboxes.forEach((other) => {
+                        if (other !== checkbox) {
+                            other.checked = false;
+                        }
+                    });
+                }
+            });
+        });
+
+        const dateFormatCheckboxes = document.querySelectorAll('.date-format-checkbox');
+        dateFormatCheckboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    dateFormatCheckboxes.forEach((other) => {
+                        if (other !== checkbox) {
+                            other.checked = false;
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
