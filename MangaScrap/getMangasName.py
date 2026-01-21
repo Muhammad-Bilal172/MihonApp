@@ -56,7 +56,7 @@ def scrapePage(app):
 
     # For scrape the extension like extracting the title image and rating of asura mangas
     @app.get("/scrapeMangaNames/{extension_id}")
-    def scrape_manga_names(
+    async def scrape_manga_names(
         request: Request,
         extension_id: str,
         cursor: Cursor = Depends(get_db_cursor),
@@ -73,7 +73,7 @@ def scrapePage(app):
             if extension_link is not None:
                 extension_link = extension_link[0]
 
-            MangaData = scrapeMangaMainDetails(extension_link)
+            MangaData = await scrapeMangaMainDetails(extension_link)
 
             # return templates.TemplateResponse("library_page.html", {"request": request, "manga_data": MangaData, "theme": theme})
 

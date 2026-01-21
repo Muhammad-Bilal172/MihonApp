@@ -1,14 +1,9 @@
 from bs4 import BeautifulSoup
-import requests
-
-def scrapeWebsites(link: str):
-    url = "https://asuracomic.net/series"
-
-    return url
-
-from bs4 import BeautifulSoup
+from network import client
 import requests
 import logging
+import httpx
+from network_setttings import *
 
 logging.basicConfig(level=logging.INFO)
 
@@ -17,15 +12,32 @@ def scrapeWebsites(link: str):
     return url
 
 
-def scrapeMangaMainDetails(link: str):
+async def scrapeMangaMainDetails(link: str):
     url = link
     html = ""
-    try:
-        response = requests.get(url, timeout=15)
-        response.raise_for_status()
-        html = response.text
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Failed to fetch initial page {url}: {e}")
+    # try:
+    #     response = requests.get(url, timeout=15)
+    #     response.raise_for_status()
+    #     html = response.text
+    # except requests.exceptions.RequestException as e:
+    #     logging.error(f"Failed to fetch initial page {url}: {e}")
+    #     return []
+
+    # try:
+    #     response = await client.get(url)
+    #     response.raise_for_status()
+    #     html = response.text
+    # except httpx.RequestError as e:
+    #     logging.error(f"Network error while fetching {url}: {e}")
+    #     return []
+
+    # except httpx.HTTPStatusError as e:
+    #     logging.error(f"HTTP error {e.response.status_code} for {url}")
+    #     return []
+
+    html = await limited_fetch(link)
+    if not html:
+        logging.error(f"Failed to fetch page: {link}")
         return []
 
     images_list = []
@@ -78,13 +90,29 @@ def scrapeMangaMainDetails(link: str):
 
             page += 1
             newUrl = f"https://asuracomic.net/series?page={page}"
-            response = requests.get(newUrl, timeout=15)
-            response.raise_for_status()
-            html = response.text
+            # response = requests.get(newUrl, timeout=15)
+            # response.raise_for_status()
+            # html = response.text
 
-        except requests.exceptions.RequestException as e:
+            # try:
+            #     response = await client.get(newUrl)
+            #     response.raise_for_status()
+            #     html = response.text
+            # except httpx.RequestError as e:
+            #     logging.error(f"Network error while fetching {newUrl}: {e}")
+            #     return []
+
+            # except httpx.HTTPStatusError as e:
+            #     logging.error(f"HTTP error {e.response.status_code} for {newUrl}")
+            #     return []
+            html = await limited_fetch(newUrl)
+            if not html:
+                logging.error(f"Failed to fetch page: {newUrl}")
+                return []
+
+        except httpx.RequestError as e:
             logging.warning(f"Stopping pagination due to network error on page {page}: {e}")
-            is_next_available = False # Stop loop gracefully
+            break
         except Exception as e:
             logging.error(f"A parsing error occurred on page {page}: {e}")
             is_next_available = False # Stop loop gracefully
@@ -100,5 +128,6 @@ def scrapeMangaMainDetails(link: str):
         mangaData.append([i,j,k,l,m])
 
     return mangaData
+
 
 

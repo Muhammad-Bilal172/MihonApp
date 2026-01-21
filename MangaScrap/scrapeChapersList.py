@@ -9,12 +9,33 @@ from database import *
 from bs4 import BeautifulSoup
 import requests
 import logging
+from network import client
+import httpx
+from network_setttings import *
 
-def scrapeChapters(link: str):
+async def scrapeChapters(link: str):
     try:
-        response = requests.get(link, timeout=15)
-        response.raise_for_status()
-        html = response.text
+        # response = requests.get(link, timeout=15)
+        # response.raise_for_status()
+        # html = response.text
+        # try:
+        #     response = await client.get(link)
+        #     response.raise_for_status()
+        #     html = response.text
+        # except httpx.RequestError as e:
+        #     logging.error(f"Network error while fetching {link}: {e}")
+        #     return []
+
+        # except httpx.HTTPStatusError as e:
+        #     logging.error(f"HTTP error {e.response.status_code} for {link}")
+        #     return []
+
+        html = await limited_fetch(link)
+        if not html:
+            logging.error(f"Failed to fetch page: {link}")
+            return []
+        # html = response.text
+
         soup = BeautifulSoup(html, "html.parser")
 
         chapter_details_link_list = []
@@ -53,7 +74,7 @@ def scrapeChapters(link: str):
 
         return chapters_list
 
-    except requests.exceptions.RequestException as e:
+    except httpx.RequestError as e:
         logging.error(f"Network error while scraping chapters from {link}: {e}")
         return []
     except Exception as e:
@@ -66,7 +87,7 @@ def scrape_chapter_list_func(app):
 
     # For scraping the list of chapters of a specific manga
     @app.get("/manga/{manga_name}/{manga_id}")
-    def scrape_chapter_list(
+    async def scrape_chapter_list(
         request: Request,
         manga_name: str,
         manga_id: str,
@@ -99,7 +120,7 @@ def scrape_chapter_list_func(app):
         cursor.execute("SELECT chapter_link, chapter_number, chapter_upload_date, chapter_id FROM MangaChapters WHERE manga_id = %s AND user_id = %s", (manga_id, user_id))
 
         if cursor.rowcount == 0:
-            chapters_data = scrapeChapters(manga_detail_link)
+            chapters_data = await scrapeChapters(manga_detail_link)
             for i in chapters_data:
                 cursor.execute("INSERT INTO MangaChapters (user_id, manga_id, chapter_link, chapter_number, chapter_upload_date, search_vector) VALUES (%s, %s, %s, %s, %s, to_tsvector('english', %s))", (user_id, manga_id, i[0], i[1], i[2], i[1]))
 
