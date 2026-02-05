@@ -10,3 +10,4 @@ requests
 selenium
 uvicorn
 Jinja2
+python-multipart
