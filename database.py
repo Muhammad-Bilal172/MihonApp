@@ -1,22 +1,15 @@
 import psycopg2
 from fastapi import HTTPException, status, Depends
 from psycopg2.extensions import cursor as Cursor
-from config import dbname, user, password, host, port
+from config import *
 from typing import Generator
 
-DB_DETAILS = {
-    "dbname": dbname,
-    "user": user,
-    "password": password,
-    "host": host,
-    "port": port,
-}
 
 def get_db_cursor() -> Generator[Cursor, None, None]:
     connection = None
     cursor = None
     try:
-        connection = psycopg2.connect(**DB_DETAILS)
+        connection = psycopg2.connect(DATABASE_URL)
         cursor = connection.cursor()
 
         yield cursor
@@ -41,7 +34,7 @@ def get_db_cursor() -> Generator[Cursor, None, None]:
 def setup_database():
     connection = None
     try:
-        connection = psycopg2.connect(**DB_DETAILS)
+        connection = psycopg2.connect(DATABASE_URL)
         cursor = connection.cursor()
 
         cursor.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')

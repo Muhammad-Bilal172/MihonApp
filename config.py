@@ -18,3 +18,5 @@ REFRESH_TOKEN_EXPIRE = os.environ.get("REFRESH_TOKEN_EXPIRE")
 smtplibPassword = os.environ.get("SMTP_PASSWORD")
 
 ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
